@@ -19,13 +19,11 @@ ClassicalYaml: &ClassicalYaml {type: http, behavior: classical, format: yaml, in
 ############################################## - ⚓️ 锚点区结束 - ############################################## 
 
 # 远程订阅组
-#注意：请提供您的机场订阅链接（将 "http://your-service-provider" 替换为你的机场订阅，推荐使用 base64 或者 node list），每个链接一行,末尾的[A]为每个节点添加机场名称前缀，可自定义修改节点前后缀(additional-prefix: "节点前缀",additional-suffix: "节点后缀")
+#注意：请提供您的机场订阅链接（将 "http://your-service-provider" 替换为你的机场订阅），每个链接一行,末尾的[A]为每个节点添加机场名称前缀，可自定义修改节点前后缀(additional-prefix: "节点前缀",additional-suffix: "节点后缀")
 proxy-providers:
   Subscribe: {url: http://your-service-provider, <<: *p, override: {additional-prefix: '[A] '}}  
   #Subscribe2: {url: http://your-service-provider, <<: *p, override: {additional-prefix: '[B] '}}
-  #Subscribe3: {url: http://your-service-provider, <<: *p, override: {additional-prefix: '[C] '}}
-  #Subscribe4: {url: http://your-service-provider, <<: *p, override: {additional-prefix: '[D] '}}
-  
+
 # 策略组
 proxy-groups:
   - {name: 手动切换, type: select, include-all: true, proxies: [香港节点, 美国节点, 狮城节点, 日本节点, 台湾节点, DIRECT], icon: https://github.com/shindgewongxj/WHATSINStash/raw/main/icon/applesafari.png}
@@ -60,7 +58,11 @@ rule-providers:
   Steam: {<<: *ClassicalText, path: ./rules/Steam.list, url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Steam/Steam.list}
   Epic: {<<: *ClassicalText, path: ./rules/Epic.list, url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Epic/Epic.list}
   DMM: {<<: *ClassicalText, path: ./rules/DMM.list, url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/DMM/DMM.list}
-  AI: {<<: *ClassicalText, path: ./rules/AI.list, url: https://github.com/Repcz/Tool/raw/X/Clash/Rules/AI.list}
+  #AI: {<<: *ClassicalText, path: ./rules/AI.list, url: https://github.com/Repcz/Tool/raw/X/Clash/Rules/AI.list}
+  OpenAI: {<<: *ClassicalText, path: ./rules/OpenAI.list, url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/OpenAI/OpenAI.list}
+  Claude: {<<: *ClassicalText, path: ./rules/Claude.list, url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Claude/Claude.list}
+  Gemini: {<<: *ClassicalText, path: ./rules/Gemini.list, url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Gemini/Gemini.list}
+  Copilot: {<<: *ClassicalText, path: ./rules/Copilot.list, url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Copilot/Copilot.list}
   Emby: {<<: *ClassicalText, path: ./rules/Emby.list, url: https://github.com/Repcz/Tool/raw/X/Clash/Rules/Emby.list}
   Spotify: {<<: *ClassicalText, path: ./rules/Spotify.list, url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Spotify/Spotify.list}
   Bahamut: {<<: *ClassicalText, path: ./rules/Bahamut.list, url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Bahamut/Bahamut.list}
@@ -74,7 +76,11 @@ rule-providers:
 # 路由
 rules:
   - RULE-SET,AD,REJECT
-  - RULE-SET,AI,AI
+ # - RULE-SET,AI,AI
+  - RULE-SET,OpenAI,AI
+  - RULE-SET,Claude,AI
+  - RULE-SET,Gemini,AI
+  - RULE-SET,Copilot,AI
   - RULE-SET,Apple,苹果服务
   - RULE-SET,YouTube,谷歌服务
   - RULE-SET,Google,谷歌服务
@@ -93,6 +99,12 @@ rules:
   - RULE-SET,PrimeVideo,国际媒体
   - RULE-SET,HBO,国际媒体
   - RULE-SET,TikTok,国际媒体
+  - DOMAIN-SUFFIX,girigirilove.com,DIRECT     #girigiri爱动漫
+  - DOMAIN-SUFFIX,ciyuancheng.net,DIRECT     #次元城动画
+  - DOMAIN-SUFFIX,qimiqimi.net,DIRECT     #奇米奇米
+  - DOMAIN-SUFFIX,iyinghua.com,DIRECT     #🌸樱花动漫
+  - DOMAIN-SUFFIX,ntdm8.com,DIRECT     #NT动漫    #NT动漫永久网址：www.ntdm.tv
+  - DOMAIN-SUFFIX,mxdm6.com,DIRECT     #MX动漫    #MX动漫永久域名：mxdm.tv 地址发布页：mxdm.fans
   - GEOSITE,onedrive,微软服务
   - GEOSITE,github,微软服务
   - GEOSITE,microsoft,微软服务

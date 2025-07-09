@@ -1,1 +1,132 @@
-1
+############################################## - ⚓️ 锚点区开始 - ##############################################
+# 锚点 - 远程订阅组
+p: &p {type: http, interval: 86400, health-check: {enable: true, url: http://1.1.1.1/generate_204, interval: 1800, timeout: 5000}}
+# 锚点 - 筛选组 
+FilterHK: &FilterHK '^(?=.*((?i)🇭🇰|香港|(\b(HK|HKG|Hong)(\d+)?\b)))(?!.*((?i)回国|校园|游戏|🎮|(\b(GAME)\b))).*$'
+FilterUS: &FilterUS '^(?=.*((?i)🇺🇸|美国|波特兰|达拉斯|俄勒冈|凤凰城|费利蒙|硅谷|拉斯维加斯|洛杉矶|圣何塞|圣克拉拉|西雅图|芝加哥|(\b(US|USA|United States)(\d+)?\b)))(?!.*((?i)回国|校园|游戏|🎮|(\b(GAME)\b))).*$'
+FilterSG: &FilterSG '^(?=.*((?i)🇸🇬|新加坡|狮|(\b(SG|SGP|Singapore)(\d+)?\b)))(?!.*((?i)回国|校园|游戏|🎮|(\b(GAME)\b))).*$'
+FilterJP: &FilterJP '^(?=.*((?i)🇯🇵|日本|川日|东京|大阪|泉日|埼玉|(\b(JP|JPN|Japan)(\d+)?\b)))(?!.*((?i)回国|校园|游戏|🎮|(\b(GAME)\b))).*$'
+FilterTW: &FilterTW '^(?=.*((?i)🇹🇼|台湾|(\b(TW|TWN|Tai|Taiwan)(\d+)?\b)))(?!.*((?i)回国|校园|游戏|🎮|(\b(GAME)\b))).*$'
+FilterDE: &FilterDE '^(?=.*((?i)🇩🇪|德国|(\b(DE|DEU|Germany)(\d+)?\b)))(?!.*((?i)回国|校园|游戏|🎮|(\b(GAME)\b))).*$'
+FilterEMBY: &FilterEMBY '^(?=.*((?i)守候|垃圾|烤肠|赔钱|DMIT)).*$'
+#FilterAll: &FilterAll '^(?=.*(.))(?!.*((?i)群|邀请|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内|地址|频道|无法|说明|使用|提示|特别|访问|支持|教程|关注|更新|作者|加入|超时|收藏|(\b(USE|USED|TOTAL|EXPIRE|EMAIL|Panel|Channel|Author)(\d+)?\b|(\d{4}-\d{2}-\d{2}|\dG)))).*$'
+# 锚点 - 选择组
+pg: &pg {type: select, proxies: [手动切换, 香港节点, 美国节点, 狮城节点, 日本节点, 台湾节点, DIRECT]}
+# 锚点 - 策略组
+url-test: &url-test {type: url-test, url: http://1.1.1.1/generate_204, interval: 300, tolerance: 0, include-all: true}
+select: &select {type: select, include-all: true}
+fallback: &fallback {type: fallback, url: http://1.1.1.1/generate_204, interval: 300, include-all: true}
+load-balance: &load-balance {type: load-balance, strategy: consistent-hashing, url: http://1.1.1.1/generate_204, interval: 300, include-all: true}
+# 锚点 - 规则集
+DM: &DM {type: http, behavior: domain, format: mrs, interval: 86400}
+DT: &DT {type: http, behavior: domain, format: text, interval: 86400}
+DY: &DY {type: http, behavior: domain, format: yaml, interval: 86400}
+IM: &IM {type: http, behavior: ipcidr, format: mrs, interval: 86400}
+IT: &IT {type: http, behavior: ipcidr, format: text, interval: 86400}
+CT: &CT {type: http, behavior: classical, format: text, interval: 86400}
+CY: &CY {type: http, behavior: classical, format: yaml, interval: 86400}
+############################################## - ⚓️ 锚点区结束 - ############################################## 
+
+# 远程订阅组
+#注意：请提供您的机场订阅链接（将 "http://your-service-provider" 替换为你的机场订阅），每个链接一行,末尾的[A]为每个节点添加机场名称前缀，可自定义修改 (additional-prefix: "节点前缀",additional-suffix: "节点后缀")
+proxy-providers:
+  Subscribe1: {url: http://your-service-provider, <<: *p, override: {additional-prefix: '[A] '}}  
+  #Subscribe2: {url: http://your-service-provider, <<: *p, override: {additional-prefix: '[B] '}}
+
+# 策略组
+proxy-groups:
+  - {name: 手动切换, type: select, include-all: true, proxies: [香港节点, 美国节点, 狮城节点, 日本节点, 台湾节点, DIRECT], icon: https://github.com/shindgewongxj/WHATSINStash/raw/main/icon/applesafari.png}
+  - {name: 国外网站, <<: *pg, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Global.png}
+  - {name: 国际媒体, <<: *pg, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/YouTube.png}
+  - {name: 哔哩哔哩,type: select, proxies: [香港节点,台湾节点, DIRECT], icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/bilibili.png}
+  - {name: 苹果服务, <<: *pg, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Apple_1.png}
+  - {name: 微软服务, <<: *pg, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Microsoft.png}
+  - {name: 谷歌服务, <<: *pg, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google_Search.png}
+  - {name: 电报消息, <<: *pg, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Telegram.png}
+  - {name: 推特消息, <<: *pg, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Twitter.png}
+  - {name: AI, <<: *pg, icon: https://raw.githubusercontent.com/Orz-3/mini/master/Color/OpenAI.png}
+  - {name: 游戏平台, <<: *pg, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Game.png}
+  - {name: Emby, type: select, include-all: true, filter: *FilterEMBY, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Emby.png}
+  - {name: Spotify, <<: *pg, include-all: true, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Spotify.png}
+  - {name: 兜底分流, <<: *pg, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Final.png}
+# 地区策略
+  - {name: 香港节点, <<: *url-test, filter: *FilterHK, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Hong_Kong.png}
+  - {name: 美国节点, <<: *url-test, filter: *FilterUS, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/United_States.png}
+  - {name: 狮城节点, <<: *url-test, filter: *FilterSG, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Singapore.png}
+  - {name: 日本节点, <<: *url-test, filter: *FilterJP, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Japan.png}
+  - {name: 台湾节点, <<: *url-test, filter: *FilterTW, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/China.png}
+  - {name: 德国节点, <<: *url-test, filter: *FilterDE, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Germany.png}
+
+# 远程规则集
+rule-providers:
+  AD: {<<: *CT, path: ./rules/AD.list, url: https://github.com/Repcz/Tool/raw/X/Clash/Rules/Reject.list}
+  Apple: {<<: *CT, path: ./rules/Apple.list, url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Apple/Apple.list}
+  YouTube: {<<: *CT, path: ./rules/YouTube.list, url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/YouTube/YouTube.list}
+  Google: {<<: *CT, path: ./rules/Google.list, url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Google/Google.list}
+  Telegram: {<<: *CT, path: ./rules/Telegram.list, url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Telegram/Telegram.list}
+  Twitter: {<<: *CT, path: ./rules/Twitter.list, url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Twitter/Twitter.list}
+  Steam: {<<: *CT, path: ./rules/Steam.list, url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Steam/Steam.list}
+  Epic: {<<: *CT, path: ./rules/Epic.list, url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Epic/Epic.list}
+  DMM: {<<: *CT, path: ./rules/DMM.list, url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/DMM/DMM.list}
+  #AI: {<<: *CT, path: ./rules/AI.list, url: https://github.com/Repcz/Tool/raw/X/Clash/Rules/AI.list}
+  OpenAI: {<<: *CT, path: ./rules/OpenAI.list, url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/OpenAI/OpenAI.list}
+  Claude: {<<: *CT, path: ./rules/Claude.list, url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Claude/Claude.list}
+  Gemini: {<<: *CT, path: ./rules/Gemini.list, url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Gemini/Gemini.list}
+  Copilot: {<<: *CT, path: ./rules/Copilot.list, url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Copilot/Copilot.list}
+  Emby: {<<: *CT, path: ./rules/Emby.list, url: https://github.com/Repcz/Tool/raw/X/Clash/Rules/Emby.list}
+  Spotify: {<<: *CT, path: ./rules/Spotify.list, url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Spotify/Spotify.list}
+  Bahamut: {<<: *CT, path: ./rules/Bahamut.list, url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Bahamut/Bahamut.list}
+  BiliBili: {<<: *CT, path: ./rules/BiliBili.list, url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/BiliBili/BiliBili.list}
+  Netflix: {<<: *CT, path: ./rules/Netflix.list, url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Netflix/Netflix.list}
+  Disney: {<<: *CT, path: ./rules/Disney.list, url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Disney/Disney.list}
+  PrimeVideo: {<<: *CT, path: ./rules/PrimeVideo.list, url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/PrimeVideo/PrimeVideo.list}
+  HBO: {<<: *CT, path: ./rules/HBO.list, url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/HBO/HBO.list}
+  TikTok: {<<: *CT, path: ./rules/TikTok.list, url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/TikTok/TikTok.list}
+
+# 路由
+rules:
+  - RULE-SET,AD,REJECT
+ # - RULE-SET,AI,AI
+  - RULE-SET,OpenAI,AI
+  - RULE-SET,Claude,AI
+  - RULE-SET,Gemini,AI
+  - RULE-SET,Copilot,AI
+  - RULE-SET,Apple,苹果服务
+  - RULE-SET,YouTube,谷歌服务
+  - RULE-SET,Google,谷歌服务
+  # Telegram
+  - IP-ASN, 59930, 美国节点, no-resolve #DC1
+  - IP-ASN, 44907, 德国节点, no-resolve #DC2
+  - IP-ASN, 211157, 美国节点, no-resolve #DC3
+  - IP-ASN, 62014, 狮城节点, no-resolve #DC4
+  - IP-ASN, 62041, 德国节点, no-resolve #DC5
+  - RULE-SET,Telegram,电报消息
+# - PROCESS-NAME,Telegram,REJECT-DROP # For Telegram macOS
+  - RULE-SET,Twitter,推特消息
+  - RULE-SET,Steam,游戏平台
+  - RULE-SET,Epic,游戏平台
+  - RULE-SET,DMM,日本节点
+  - RULE-SET,Emby,Emby
+  - RULE-SET,Spotify,Spotify
+  - RULE-SET,Bahamut,台湾节点
+  - RULE-SET,BiliBili,哔哩哔哩
+  - RULE-SET,Netflix,国际媒体
+  - RULE-SET,Disney,国际媒体
+  - RULE-SET,PrimeVideo,国际媒体
+  - RULE-SET,HBO,国际媒体
+  - RULE-SET,TikTok,国际媒体
+  - DOMAIN-SUFFIX,girigirilove.com,DIRECT     #girigiri爱动漫
+  - DOMAIN-SUFFIX,ciyuancheng.net,DIRECT     #次元城动画
+  - DOMAIN-SUFFIX,cycanime.com,DIRECT     #次元城动画视频地址
+  #- DOMAIN-SUFFIX,senhewenhua.com,DIRECT     #次元城动画视频流
+  - DOMAIN-SUFFIX,qimiqimi.net,DIRECT     #奇米奇米
+  - DOMAIN-SUFFIX,iyinghua.com,DIRECT     #🌸樱花动漫
+  - DOMAIN-SUFFIX,ntdm8.com,DIRECT     #NT动漫    #NT动漫永久网址：www.ntdm.tv
+  - DOMAIN-SUFFIX,mxdm6.com,DIRECT     #MX动漫    #MX动漫永久域名：mxdm.tv 地址发布页：mxdm.fans
+  - GEOSITE,onedrive,微软服务
+  - GEOSITE,github,微软服务
+  - GEOSITE,microsoft,微软服务
+  - GEOSITE,gfw,国外网站
+  - GEOIP,private,DIRECT
+  - GEOIP,cn,DIRECT
+  - MATCH,兜底分流

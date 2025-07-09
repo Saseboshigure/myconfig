@@ -1,6 +1,15 @@
 ############################################## - ⚓️ 锚点区开始 - ##############################################
 # 锚点 - 远程订阅组
 p: &p {type: http, interval: 86400, health-check: {enable: true, url: http://1.1.1.1/generate_204, interval: 1800, timeout: 5000}}
+# 锚点 - 筛选组 
+FilterHK: &FilterHK '^(?=.*((?i)🇭🇰|香港|(\b(HK|HKG|Hong)(\d+)?\b)))(?!.*((?i)回国|校园|游戏|🎮|(\b(GAME)\b))).*$'
+FilterUS: &FilterUS '^(?=.*((?i)🇺🇸|美国|波特兰|达拉斯|俄勒冈|凤凰城|费利蒙|硅谷|拉斯维加斯|洛杉矶|圣何塞|圣克拉拉|西雅图|芝加哥|(\b(US|USA|United States)(\d+)?\b)))(?!.*((?i)回国|校园|游戏|🎮|(\b(GAME)\b))).*$'
+FilterSG: &FilterSG '^(?=.*((?i)🇸🇬|新加坡|狮|(\b(SG|SGP|Singapore)(\d+)?\b)))(?!.*((?i)回国|校园|游戏|🎮|(\b(GAME)\b))).*$'
+FilterJP: &FilterJP '^(?=.*((?i)🇯🇵|日本|川日|东京|大阪|泉日|埼玉|(\b(JP|JPN|Japan)(\d+)?\b)))(?!.*((?i)回国|校园|游戏|🎮|(\b(GAME)\b))).*$'
+FilterTW: &FilterTW '^(?=.*((?i)🇹🇼|台湾|(\b(TW|TWN|Tai|Taiwan)(\d+)?\b)))(?!.*((?i)回国|校园|游戏|🎮|(\b(GAME)\b))).*$'
+FilterDE: &FilterDE '^(?=.*((?i)🇩🇪|德国|(\b(DE|DEU|Germany)(\d+)?\b)))(?!.*((?i)回国|校园|游戏|🎮|(\b(GAME)\b))).*$'
+FilterEMBY: &FilterEMBY '^(?=.*((?i)守候|垃圾|烤肠|赔钱|DMIT)).*$'
+#FilterAll: &FilterAll '^(?=.*(.))(?!.*((?i)群|邀请|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内|地址|频道|无法|说明|使用|提示|特别|访问|支持|教程|关注|更新|作者|加入|超时|收藏|(\b(USE|USED|TOTAL|EXPIRE|EMAIL|Panel|Channel|Author)(\d+)?\b|(\d{4}-\d{2}-\d{2}|\dG)))).*$'
 # 锚点 - 选择组
 pg: &pg {type: select, proxies: [手动切换, 香港节点, 美国节点, 狮城节点, 日本节点, 台湾节点, DIRECT]}
 # 锚点 - 策略组
@@ -21,7 +30,7 @@ CY: &CY {type: http, behavior: classical, format: yaml, interval: 86400}
 # 远程订阅组
 #注意：请提供您的机场订阅链接（将 "http://your-service-provider" 替换为你的机场订阅），每个链接一行,末尾的[A]为每个节点添加机场名称前缀，可自定义修改 (additional-prefix: "节点前缀",additional-suffix: "节点后缀")
 proxy-providers:
-  Subscribe: {url: http://your-service-provider, <<: *p, override: {additional-prefix: '[A] '}}  
+  Subscribe1: {url: http://your-service-provider, <<: *p, override: {additional-prefix: '[A] '}}  
   #Subscribe2: {url: http://your-service-provider, <<: *p, override: {additional-prefix: '[B] '}}
 
 # 策略组
@@ -37,16 +46,16 @@ proxy-groups:
   - {name: 推特消息, <<: *pg, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Twitter.png}
   - {name: AI, <<: *pg, icon: https://raw.githubusercontent.com/Orz-3/mini/master/Color/OpenAI.png}
   - {name: 游戏平台, <<: *pg, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Game.png}
-  - {name: Emby, <<: *pg, include-all: true, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Emby.png}
+  - {name: Emby, type: select, include-all: true, filter: *FilterEMBY, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Emby.png}
   - {name: Spotify, <<: *pg, include-all: true, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Spotify.png}
   - {name: 兜底分流, <<: *pg, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Final.png}
 # 地区策略
-  - {name: 香港节点, <<: *url-test, filter: "(?i)🇭🇰|香港|(\b(HK|Hong)\b)", icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Hong_Kong.png}
-  - {name: 美国节点, <<: *url-test, filter: "(?i)🇺🇸|美国|洛杉矶|圣何塞|(\b(US|United States)\b)", icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/United_States.png}
-  - {name: 狮城节点, <<: *url-test, filter: "(?i)🇸🇬|新加坡|狮|(\b(SG|Singapore)\b)", icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Singapore.png}
-  - {name: 日本节点, <<: *url-test, filter: "(?i)🇯🇵|日本|东京|(\b(JP|Japan)\b)", icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Japan.png}
-  - {name: 台湾节点, <<: *url-test, filter: "(?i)🇨🇳|🇹🇼|台湾|(\b(TW|Tai|Taiwan)\b)", icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/China.png}
-  - {name: 德国节点, <<: *url-test, filter: "(?i)(🇩🇪|德国|\b(DE|Germany|Deutschland)\b)", icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Germany.png}
+  - {name: 香港节点, <<: *url-test, filter: *FilterHK, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Hong_Kong.png}
+  - {name: 美国节点, <<: *url-test, filter: *FilterUS, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/United_States.png}
+  - {name: 狮城节点, <<: *url-test, filter: *FilterSG, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Singapore.png}
+  - {name: 日本节点, <<: *url-test, filter: *FilterJP, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Japan.png}
+  - {name: 台湾节点, <<: *url-test, filter: *FilterTW, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/China.png}
+  - {name: 德国节点, <<: *url-test, filter: *FilterDE, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Germany.png}
 
 # 远程规则集
 rule-providers:
@@ -108,6 +117,8 @@ rules:
   - RULE-SET,TikTok,国际媒体
   - DOMAIN-SUFFIX,girigirilove.com,DIRECT     #girigiri爱动漫
   - DOMAIN-SUFFIX,ciyuancheng.net,DIRECT     #次元城动画
+  - DOMAIN-SUFFIX,cycanime.com,DIRECT     #次元城动画视频地址
+  #- DOMAIN-SUFFIX,senhewenhua.com,DIRECT     #次元城动画视频流
   - DOMAIN-SUFFIX,qimiqimi.net,DIRECT     #奇米奇米
   - DOMAIN-SUFFIX,iyinghua.com,DIRECT     #🌸樱花动漫
   - DOMAIN-SUFFIX,ntdm8.com,DIRECT     #NT动漫    #NT动漫永久网址：www.ntdm.tv

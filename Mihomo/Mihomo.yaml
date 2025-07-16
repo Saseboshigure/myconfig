@@ -30,7 +30,7 @@ CY: &CY {type: http, behavior: classical, format: yaml, interval: 86400}
 ############################################## - ⚓️ 锚点区结束 - ############################################## 
 
 # 远程订阅组
-#注意：请提供您的机场订阅链接（将 "http://your-service-provider" 替换为你的机场订阅），每个链接一行,末尾的[A]为每个节点添加机场名称前缀，可自定义修改 (additional-prefix: "节点前缀",additional-suffix: "节点后缀")
+# 注意：请提供您的机场订阅链接（将 "http://your-service-provider" 替换为你的机场订阅），每个链接一行,末尾的[A]为每个节点添加机场名称前缀，可自定义修改 (additional-prefix: "节点前缀",additional-suffix: "节点后缀")
 proxy-providers:
   Subscribe1: {url: http://your-service-provider, <<: *p, override: {additional-prefix: '[A] '}}  
   #Subscribe2: {url: http://your-service-provider, <<: *p, override: {additional-prefix: '[B] '}}
@@ -111,7 +111,6 @@ proxy-groups:
   - {name: 微软服务, <<: *pg, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Microsoft.png}
   - {name: 谷歌服务, <<: *pg, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google_Search.png}
   - {name: 电报消息, <<: *pg, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Telegram.png}
-  - {name: 推特消息, <<: *pg, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Twitter.png}
   - {name: AI, <<: *pg, icon: https://raw.githubusercontent.com/Orz-3/mini/master/Color/OpenAI.png}
   - {name: 游戏平台, <<: *pg, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Game.png}
   - {name: Emby, type: select, include-all: true, filter: *FilterEMBY, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Emby.png}
@@ -127,11 +126,31 @@ proxy-groups:
   - {name: 欧盟节点, <<: *url-test, filter: *FilterEU, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/European_Union.png}
 # 远程规则集
 rule-providers:
-  AD: {<<: *CT, path: ./rules/AD.list, url: https://github.com/Repcz/Tool/raw/X/Clash/Rules/Reject.list}
-  Apple: {<<: *CT, path: ./rules/Apple.list, url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Apple/Apple.list}
+# 广告拦截 / 隐私保护 / Malware 拦截 / Phishing 拦截
+  #AD: {<<: *CT, path: ./rules/AD.list, url: https://github.com/Repcz/Tool/raw/X/Clash/Rules/Reject.list}
+  reject_non_ip_no_drop: {<<: *CT, path: ./rules/reject_non_ip_no_drop.txt, url: https://ruleset.skk.moe/Clash/non_ip/reject-no-drop.txt}
+  reject_non_ip_drop: {<<: *CT, path: ./rules/reject_non_ip_drop.txt, url: https://ruleset.skk.moe/Clash/non_ip/reject-drop.txt}
+  reject_non_ip: {<<: *CT, path: ./rules/reject_non_ip.txt, url: https://ruleset.skk.moe/Clash/non_ip/reject.txt}
+  reject_ip: {<<: *CT, path: ./rules/reject_ip.txt, url: https://ruleset.skk.moe/Clash/ip/reject.txt}
+  reject_domainset: {<<: *DT, path: ./rules/reject_domainset.txt, url: https://ruleset.skk.moe/Clash/domainset/reject.txt}
+  reject_extra_domainset: {<<: *DT, path: ./rules/reject_domainset_extra.txt, url: https://ruleset.skk.moe/Clash/domainset/reject_extra.txt}
+# 常见静态 CDN
+  cdn_domainset: {<<: *DT, path: ./rules/cdn_domainset.txt, url: https://ruleset.skk.moe/Clash/domainset/cdn.txt}
+  cdn_non_ip: {<<: *CT, path: ./rules/cdn_non_ip.txt, url: https://ruleset.skk.moe/Clash/non_ip/cdn.txt}
+# Apple CDN 
+  apple_cdn: {<<: *DT, path: ./rules/apple_cdn.txt, url: https://ruleset.skk.moe/Clash/domainset/apple_cdn.txt}
+# Apple Service
+  apple_services: {<<: *CT, path: ./rules/apple_services.txt, url: https://ruleset.skk.moe/Clash/non_ip/apple_services.txt}
+#Apple CN
+  apple_cn_non_ip: {<<: *CT, path: ./rules/apple_cn_non_ip.txt, url: https://ruleset.skk.moe/Clash/non_ip/apple_cn.txt}
+# Microsoft CDN
+  microsoft_cdn_non_ip: {<<: *CT, path: ./rules/microsoft_cdn_non_ip.txt, url: https://ruleset.skk.moe/Clash/non_ip/microsoft_cdn.txt}
+# Microsoft
+  microsoft_non_ip: {<<: *CT, path: ./rules/microsoft_non_ip.txt, url: https://ruleset.skk.moe/Clash/non_ip/microsoft.txt}
   YouTube: {<<: *CT, path: ./rules/YouTube.list, url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/YouTube/YouTube.list}
   Google: {<<: *CT, path: ./rules/Google.list, url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Google/Google.list}
-  Telegram: {<<: *CT, path: ./rules/Telegram.list, url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Telegram/Telegram.list}
+  telegram_non_ip: {<<: *CT, path: ./rules/telegram_non_ip.txt, url: https://ruleset.skk.moe/Clash/non_ip/telegram.txt}
+  telegram_ip: {<<: *CT, path: ./rules/telegram_ip.txt, url: https://ruleset.skk.moe/Clash/ip/telegram.txt}
   Twitter: {<<: *CT, path: ./rules/Twitter.list, url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Twitter/Twitter.list}
   Steam: {<<: *CT, path: ./rules/Steam.list, url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Steam/Steam.list}
   Epic: {<<: *CT, path: ./rules/Epic.list, url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Epic/Epic.list}
@@ -160,40 +179,38 @@ rule-providers:
 # 所有流媒体（包括上述所有流媒体）
   stream_non_ip: {<<: *CT, path: ./rules/stream_non_ip.txt, url: https://ruleset.skk.moe/Clash/non_ip/stream.txt}
   stream_ip: {<<: *CT, path: ./rules/stream_ip.txt, url: https://ruleset.skk.moe/Clash/ip/stream.txt}
+# 内网域名和局域网 IP
+  lan_non_ip: {<<: *CT, path: ./rules/lan_non_ip.txt, url: https://ruleset.skk.moe/Clash/non_ip/lan.txt}
+  lan_ip: {<<: *CT, path: ./rules/lan_ip.txt, url: https://ruleset.skk.moe/Clash/ip/lan.txt}
+# 国内常见域名和 IP
+  domestic_non_ip: {<<: *CT, path: ./rules/domestic_non_ip.txt, url: https://ruleset.skk.moe/Clash/non_ip/domestic.txt}
+  domestic_ip: {<<: *CT, path: ./rules/domestic_ip.txt, url: https://ruleset.skk.moe/Clash/ip/domestic.txt}
+# 常见直连规则列表  
+  direct_non_ip: {<<: *CT, path: ./rules/direct_non_ip.txt, url: https://ruleset.skk.moe/Clash/non_ip/direct.txt}
+# 常见海外域名
+  global_non_ip: {<<: *CT, path: ./rules/global_non_ip.txt, url: https://ruleset.skk.moe/Clash/non_ip/global.txt}
+# chnroute CIDR
+  china_ip: {<<: *IT, path: ./rules/china_ip.txt, url: https://ruleset.skk.moe/Clash/ip/china_ip.txt}
+  china_ip_ipv6: {<<: *IT, path: ./rules/china_ipv6.txt, url: https://ruleset.skk.moe/Clash/ip/china_ip_ipv6.txt}
 # 路由
 rules:
-  - RULE-SET,AD,REJECT
-  - RULE-SET,ai_non_ip,AI
-  - RULE-SET,Apple,苹果服务
-  - RULE-SET,YouTube,谷歌服务
-  - RULE-SET,Google,谷歌服务
-  # Telegram
-  - IP-ASN, 59930, 美国节点, no-resolve #DC1
-  - IP-ASN, 44907, 德国节点, no-resolve #DC2
-  - IP-ASN, 211157, 美国节点, no-resolve #DC3
-  - IP-ASN, 62014, 狮城节点, no-resolve #DC4
-  - IP-ASN, 62041, 德国节点, no-resolve #DC5
-  - RULE-SET,Telegram,电报消息
-# - PROCESS-NAME,Telegram,REJECT-DROP # For Telegram macOS
-  - RULE-SET,Twitter,推特消息
-  - RULE-SET,Steam,游戏平台
-  - RULE-SET,Epic,游戏平台
-  - RULE-SET,DMM,日本节点
-  - RULE-SET,Emby,Emby
-  - RULE-SET,stream_us_non_ip,美国节点
-  - RULE-SET,stream_eu_non_ip,欧盟节点
-  - RULE-SET,stream_jp_non_ip,日本节点
-  - RULE-SET,stream_kr_non_ip,韩国节点
-  - RULE-SET,stream_hk_non_ip,香港节点
-  - RULE-SET,stream_tw_non_ip,台湾节点
-  - RULE-SET,stream_non_ip,国际媒体
-  - RULE-SET,stream_us_ip,美国节点
-  - RULE-SET,stream_eu_ip,欧盟节点
-  - RULE-SET,stream_jp_ip,日本节点
-  - RULE-SET,stream_kr_ip,韩国节点
-  - RULE-SET,stream_hk_ip,香港节点
-  - RULE-SET,stream_tw_ip,台湾节点
-  - RULE-SET,stream_ip,国际媒体
+# 局域网、内网、私有地址优先直连
+  - RULE-SET,lan_non_ip,DIRECT
+  - RULE-SET,lan_ip,DIRECT
+  - GEOIP,private,DIRECT       # 内建私有网兜底，优先级高于国内规则
+# 拦截类规则（广告、恶意域名等）  
+  - RULE-SET,reject_non_ip,REJECT
+  - RULE-SET,reject_domainset,REJECT
+  - RULE-SET,reject_extra_domainset,REJECT
+  - RULE-SET,reject_non_ip_drop,REJECT-DROP
+  - RULE-SET,reject_non_ip_no_drop,REJECT
+  - RULE-SET,reject_ip,REJECT
+  #- RULE-SET,AD,REJECT   
+# 国内加速类服务直连 
+  - RULE-SET,apple_cdn,DIRECT
+  - RULE-SET,microsoft_cdn_non_ip,DIRECT
+  - RULE-SET,apple_cn_non_ip,DIRECT 
+# 常用动漫站点
   - DOMAIN-SUFFIX,girigirilove.com,DIRECT     #girigiri爱动漫
   - DOMAIN-SUFFIX,ciyuancheng.net,DIRECT     #次元城动画
   - DOMAIN-SUFFIX,cycanime.com,DIRECT     #次元城动画视频地址
@@ -201,10 +218,49 @@ rules:
   - DOMAIN-SUFFIX,iyinghua.com,DIRECT     #🌸樱花动漫
   - DOMAIN-SUFFIX,ntdm8.com,DIRECT     #NT动漫    #NT动漫永久网址：www.ntdm.tv
   - DOMAIN-SUFFIX,mxdm6.com,DIRECT     #MX动漫    #MX动漫永久域名：mxdm.tv 地址发布页：mxdm.fans
-  - GEOSITE,onedrive,微软服务
+# 精准国外服务分流  
+  - RULE-SET,ai_non_ip,AI
+  - RULE-SET,apple_services,苹果服务
+  - RULE-SET,microsoft_non_ip,微软服务
   - GEOSITE,github,微软服务
-  - GEOSITE,microsoft,微软服务
-  - GEOSITE,gfw,国外网站
-  - GEOIP,private,DIRECT
+  - RULE-SET,YouTube,谷歌服务
+  - RULE-SET,Google,谷歌服务
+  - RULE-SET,telegram_non_ip,电报消息
+  - RULE-SET,telegram_ip,电报消息
+# - PROCESS-NAME,Telegram,REJECT-DROP # For Telegram macOS
+# 游戏平台 
+  - RULE-SET,Steam,游戏平台
+  - RULE-SET,Epic,游戏平台
+  - RULE-SET,DMM,日本节点
+# Emby 
+  - RULE-SET,Emby,Emby
+# 地区流媒体（优先精确匹配） 
+  - RULE-SET,stream_us_non_ip,美国节点
+  - RULE-SET,stream_eu_non_ip,欧盟节点
+  - RULE-SET,stream_jp_non_ip,日本节点
+  - RULE-SET,stream_kr_non_ip,韩国节点
+  - RULE-SET,stream_hk_non_ip,香港节点
+  - RULE-SET,stream_tw_non_ip,台湾节点
+  - RULE-SET,stream_us_ip,美国节点
+  - RULE-SET,stream_eu_ip,欧盟节点
+  - RULE-SET,stream_jp_ip,日本节点
+  - RULE-SET,stream_kr_ip,韩国节点
+  - RULE-SET,stream_hk_ip,香港节点
+  - RULE-SET,stream_tw_ip,台湾节点
+# 整合流媒体兜底
+  - RULE-SET,stream_non_ip,国际媒体
+  - RULE-SET,stream_ip,国际媒体
+# 国外网站代理类规则（CDN/GFW/Global）
+  - RULE-SET,cdn_domainset,国外网站
+  - RULE-SET,cdn_non_ip,国外网站
+  - RULE-SET,global_non_ip,国外网站
+  #- GEOSITE,gfw,国外网站
+# 国内兜底直连
+  - RULE-SET,direct_non_ip,DIRECT
+  - RULE-SET,domestic_non_ip,DIRECT
+  - RULE-SET,domestic_ip,DIRECT
+  - RULE-SET,china_ip,DIRECT
+  - RULE-SET,china_ip_ipv6,DIRECT   # ✅ 仅在你启用 IPv6 时打开
   - GEOIP,cn,DIRECT
+# 最终兜底分流
   - MATCH,兜底分流
